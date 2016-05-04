@@ -2,10 +2,43 @@
 <html>
   <head>
     <title><%= title %></title>
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    <div id="map"></div>
+    <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+    <script>
+      var map = L.map('map').setView([51.505, -0.09], 13);
+      var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+      var osmAttrib='Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
+      L.tileLayer(osmUrl, {minZoom: 1, maxZoom: 13, attribution: osmAttrib}).addTo(map);
+
+      var ws_url = 'ws://' + location.host + '/ws';
+
+      var sock;
+      $(function() {
+        sock = new WebSocket(ws_url);
+        // TODO: add websocket reconnection logic
+        sock.onopen = function() {
+          console.log('connected:' + ws_url);
+          // a send function, to aid logging
+          send = function(data) {
+            console.log('tx:' + data);
+            sock.send(data);
+          };
+          sock.onmessage = function(message) {
+            console.log('rx:' + message.data);
+            var data = JSON.parse(message.data);
+            //handleMessageData(data);
+          };
+        };
+        sock.onclose = function() {
+          console.log('websocket closed by server, please refresh page to continue');
+        };
+        sock.onerror = function(err) {
+          console.error('websocket error: ' + err);
+        };
+    </script>
   </body>
 </html>
