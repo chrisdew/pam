@@ -1,40 +1,80 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <title><%= title %></title>
-    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
-    <link rel='stylesheet' href='/css/csv.css' />
-  </head>
-  <body>
-    <div id="wrapper">
-      <div id="map"></div>
-      <div id="sidebar">
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css"/>
+    <link rel='stylesheet' href='/css/csv.css'/>
+</head>
+<body>
+<div id="wrapper">
+    <div id="map"></div>
+    <div id="sidebar">
         <div id="sidebar_wrapper">
-          <div id="title">
-          </div>
-          <div id="legend">
-            Paste CSV data below.
-          </div>
+            <div id="title">
+            </div>
+            <div id="legend">
+                Paste CSV data below.
+            </div>
           <textarea id="csv_input">
 
           </textarea>
         </div>
-      </div>
     </div>
-    <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
-    <script>
-      var map = L.map('map').setView([51.505, -0.09], 13);
-      var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-      var osmAttrib='Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
-      L.tileLayer(osmUrl, {minZoom: 1, maxZoom: 18, attribution: osmAttrib}).addTo(map);
+</div>
+<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+<script>
+    var map = L.map('map').setView([51.505, -0.09], 13);
+    var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+    var osmAttrib = 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
+    L.tileLayer(osmUrl, {minZoom: 1, maxZoom: 18, attribution: osmAttrib}).addTo(map);
 
-      var csv_input = document.querySelectorAll('#csv_input')[0];
-      csv_input.addEventListener('keyup', function(arg) {
-        alert('keyup');
-      });
-      csv_input.addEventListener('change', function(arg) {
-        alert('change');
-      });
-    </script>
-  </body>
+    var resources = {};
+    var csv_input = document.querySelectorAll('#csv_input')[0];
+    csv_input.addEventListener('keyup', function (arg) {
+        console.log('keyup');
+        resources = parse_input(csv_input.value);
+    });
+    csv_input.addEventListener('change', function (arg) {
+        console.log('change');
+        resources = parse_input(csv_input.value);
+    });
+
+    function parse_input(text) {
+        console.log(text);
+        var resources = {};
+        var lines = text.split(/[\n\r]/);
+        for (var i in lines) {
+            var fields = lines[i].split(',');
+            if (fields.length < 4) continue;
+            var tag = fields[0];
+            var fix = new Fix(tag, fields[1], fields[2], fields[3]);
+            if (!resources[tag]) resources[tag] = new Resource(tag);
+            resources[tag].addFix(fix);
+        }
+        return resources;
+    }
+
+    function Fix(tag, ts, lat, lng) {
+        this.tag = tag;
+        this.ts = ts;
+        this.lat = lat;
+        this.lng = lng;
+    }
+
+    function Resource(tag) {
+        this.tag = tag;
+        this.fixes = [];
+    }
+
+    Resource.prototype.addFix = function(fix) {
+        this.fixes.push(fix);
+        // keep fixes sorted by timestamp
+        this.fixes.sort(function(a, b) {
+            if (a.ts > b.ts) return 1;
+            if (a.ts < b.ts) return -1;
+            return 0;
+        });
+    }
+</script>
+</body>
 </html>
