@@ -33,10 +33,12 @@
     csv_input.addEventListener('keyup', function (arg) {
         console.log('keyup');
         resources = parse_input(csv_input.value);
+        draw_multi_polyline(map, resources);
     });
     csv_input.addEventListener('change', function (arg) {
         console.log('change');
         resources = parse_input(csv_input.value);
+        draw_multi_polyline(map, resources);
     });
 
     function parse_input(text) {
@@ -54,11 +56,19 @@
         return resources;
     }
 
+    function draw_multi_polyline(map, resources) {
+        var polylines = [];
+        for (var tag in resources) {
+            polylines.push(resources[tag].getPolyline());
+        }
+        L.multiPolyline(polylines).addTo(map);
+    }
+
     function Fix(tag, ts, lat, lng) {
         this.tag = tag;
         this.ts = ts;
-        this.lat = lat;
-        this.lng = lng;
+        this.lat = parseFloat(lat,10);
+        this.lng = parseFloat(lng,10);
     }
 
     function Resource(tag) {
@@ -74,6 +84,15 @@
             if (a.ts < b.ts) return -1;
             return 0;
         });
+    }
+
+    Resource.prototype.getPolyline = function() {
+        var polyline = [];
+        for (var i in this.fixes) {
+            var fix = this.fixes[i];
+            polyline.push([fix.lat, fix.lng]);
+        }
+        return polyline;
     }
 </script>
 </body>
