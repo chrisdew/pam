@@ -6,9 +6,12 @@ html, body, div#wrapper, div#map {
     height: 100%;
 }
 
-body {
+body, div, p {
     padding: 0;
     margin: 0;
+}
+
+body {
     display: flex;
     min-height: 100vh;
     flex-direction: row;
@@ -53,4 +56,8 @@ h2 {
     padding-top: 0;
     padding-left: 30px;
     font-size: 1.2em;
+}
+
+#legend {
+    padding: 0 10px;
 }

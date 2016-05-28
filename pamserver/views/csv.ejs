@@ -13,7 +13,8 @@
         <h2>- it's map time</h2>
     </div>
     <div id="legend">
-        Paste CSV data below.
+        <p>Paste CSV data below.</p>
+        <p>(tag, time, lat, long)</p>
     </div>
     <textarea id="csv_input">TAG0,1464208367,51.50,-0.09
 TAG0,1464208377,51.51,-0.08
@@ -23,47 +24,6 @@ TAG1,1464208377,51.57,-0.03</textarea>
 </div>
 <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
 <script>
-    var map = L.map('map').setView([51.505, -0.09], 11);
-    var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-    var osmAttrib = 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
-    L.tileLayer(osmUrl, {minZoom: 1, maxZoom: 18, attribution: osmAttrib}).addTo(map);
-
-    var resources = {};
-    var csv_input = document.querySelectorAll('#csv_input')[0];
-    csv_input.addEventListener('keyup', function (arg) {
-        console.log('keyup');
-        resources = parse_input(csv_input.value);
-        draw_multi_polyline(map, resources);
-    });
-    csv_input.addEventListener('change', function (arg) {
-        console.log('change');
-        resources = parse_input(csv_input.value);
-        draw_multi_polyline(map, resources);
-    });
-
-    function parse_input(text) {
-        console.log(text);
-        var resources = {};
-        var lines = text.split(/[\n\r]/);
-        for (var i in lines) {
-            var fields = lines[i].split(',');
-            if (fields.length < 4) continue;
-            var tag = fields[0];
-            var fix = new Fix(tag, fields[1], fields[2], fields[3]);
-            if (!resources[tag]) resources[tag] = new Resource(tag);
-            resources[tag].addFix(fix);
-        }
-        return resources;
-    }
-
-    function draw_multi_polyline(map, resources) {
-        var polylines = [];
-        for (var tag in resources) {
-            polylines.push(resources[tag].getPolyline());
-        }
-        L.multiPolyline(polylines).addTo(map);
-    }
-
     function Fix(tag, ts, lat, lng) {
         this.tag = tag;
         this.ts = ts;
@@ -94,6 +54,69 @@ TAG1,1464208377,51.57,-0.03</textarea>
         }
         return polyline;
     }
+
+    // a container for multiple resources
+    function Fleet() {
+        this.resources = {};
+        this.multiPolyline = null;
+    }
+
+    Fleet.prototype.addFix = function(fix) {
+        if (!this.resources[fix.tag]) this.resources[fix.tag] = new Resource(fix.tag);
+        this.resources[fix.tag].addFix(fix);
+    }
+
+    Fleet.prototype.undraw = function(map) {
+        if (this.multiPolyline != null) {
+            map.removeLayer(this.multiPolyline);
+        }
+    }
+
+    Fleet.prototype.parseCsv = function(text) {
+        console.log(text);
+
+        this.resources = {};
+
+        var lines = text.split(/[\n\r]/);
+        for (var i in lines) {
+            var fields = lines[i].split(',');
+            if (fields.length < 4) continue;
+            var tag = fields[0];
+            var fix = new Fix(tag, fields[1], fields[2], fields[3]);
+            this.addFix(fix);
+        }
+    }
+
+    Fleet.prototype.redraw = function(map) {
+        var polylines = [];
+        for (var tag in this.resources) {
+            polylines.push(this.resources[tag].getPolyline());
+        }
+        this.multiPolyline = L.multiPolyline(polylines);
+        this.multiPolyline.addTo(map);
+    }
+
+    var map = L.map('map').setView([51.505, -0.09], 11);
+    var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+    var osmAttrib = 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
+    L.tileLayer(osmUrl, {minZoom: 1, maxZoom: 18, attribution: osmAttrib}).addTo(map);
+
+    var fleet = new Fleet();
+    var csv_input = document.querySelectorAll('#csv_input')[0];
+    csv_input.addEventListener('keyup', function (arg) {
+        console.log('keyup');
+        fleet.undraw(map);
+        fleet.parseCsv(csv_input.value);
+        fleet.redraw(map);
+    });
+    csv_input.addEventListener('change', function (arg) {
+        console.log('change');
+        fleet.undraw(map);
+        fleet.parseCsv(csv_input.value);
+        fleet.redraw(map);
+    });
+
+
 </script>
 </body>
 </html>
