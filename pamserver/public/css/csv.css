@@ -39,3 +39,18 @@ body {
     width: 100%;
     flex: 1
 }
+
+h1, h2 {
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    font-size: 2em;
+    padding-bottom: 0;
+}
+h2 {
+    padding-top: 0;
+    padding-left: 30px;
+    font-size: 1.2em;
+}
