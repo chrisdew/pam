@@ -56,7 +56,8 @@ TAG1,1464208377,51.57,-0.03</textarea>
     }
 
     // a container for multiple resources
-    function Fleet() {
+    function Fleet(map) {
+        this.map = map;
         this.resources = {};
         this.multiPolyline = null;
     }
@@ -66,9 +67,9 @@ TAG1,1464208377,51.57,-0.03</textarea>
         this.resources[fix.tag].addFix(fix);
     }
 
-    Fleet.prototype.undraw = function(map) {
+    Fleet.prototype.undraw = function() {
         if (this.multiPolyline != null) {
-            map.removeLayer(this.multiPolyline);
+            this.map.removeLayer(this.multiPolyline);
         }
     }
 
@@ -87,35 +88,43 @@ TAG1,1464208377,51.57,-0.03</textarea>
         }
     }
 
-    Fleet.prototype.redraw = function(map) {
+    Fleet.prototype.redraw = function() {
         var polylines = [];
         for (var tag in this.resources) {
             polylines.push(this.resources[tag].getPolyline());
         }
         this.multiPolyline = L.multiPolyline(polylines);
-        this.multiPolyline.addTo(map);
+        this.multiPolyline.addTo(this.map);
     }
 
-    var map = L.map('map').setView([51.505, -0.09], 11);
-    var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-    var osmAttrib = 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
-    L.tileLayer(osmUrl, {minZoom: 1, maxZoom: 18, attribution: osmAttrib}).addTo(map);
+    Fleet.prototype.updateCsv = function(csv) {
+        this.undraw();
+        this.parseCsv(csv);
+        this.redraw();
+    }
 
-    var fleet = new Fleet();
-    var csv_input = document.querySelectorAll('#csv_input')[0];
-    csv_input.addEventListener('keyup', function (arg) {
-        console.log('keyup');
-        fleet.undraw(map);
-        fleet.parseCsv(csv_input.value);
-        fleet.redraw(map);
-    });
-    csv_input.addEventListener('change', function (arg) {
-        console.log('change');
-        fleet.undraw(map);
-        fleet.parseCsv(csv_input.value);
-        fleet.redraw(map);
-    });
+    function main() {
+        var map = L.map('map').setView([51.505, -0.09], 11);
+        var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+        var osmAttrib = 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
+        L.tileLayer(osmUrl, {minZoom: 1, maxZoom: 18, attribution: osmAttrib}).addTo(map);
 
+        var fleet = new Fleet(map);
+        var csv_input = document.querySelectorAll('#csv_input')[0];
+        csv_input.addEventListener('keyup', function (arg) {
+            console.log('keyup');
+            fleet.updateCsv(csv_input.value);
+        });
+        csv_input.addEventListener('change', function (arg) {
+            console.log('change');
+            fleet.updateCsv(csv_input.value);
+        });
+
+        // display data when page loads
+        fleet.updateCsv(csv_input.value);
+    }
+
+    main();
 
 </script>
 </body>
