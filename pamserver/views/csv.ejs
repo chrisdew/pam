@@ -6,24 +6,22 @@
     <link rel='stylesheet' href='/css/csv.css'/>
 </head>
 <body>
-<div id="wrapper">
-    <div id="map"></div>
-    <div id="sidebar">
-        <div id="sidebar_wrapper">
-            <div id="title">
-            </div>
-            <div id="legend">
-                Paste CSV data below.
-            </div>
-            <textarea id="csv_input">
-
-            </textarea>
-        </div>
+<div id="map"></div>
+<div id="sidebar">
+    <div id="title">
     </div>
+    <div id="legend">
+        Paste CSV data below.
+    </div>
+    <textarea id="csv_input">TAG0,1464208367,51.50,-0.09
+TAG0,1464208377,51.51,-0.08
+TAG1,1464208377,51.58,-0.02
+TAG0,1464208387,51.52,-0.07
+TAG1,1464208377,51.57,-0.03</textarea>
 </div>
 <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
 <script>
-    var map = L.map('map').setView([51.505, -0.09], 13);
+    var map = L.map('map').setView([51.505, -0.09], 11);
     var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
     var osmAttrib = 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
     L.tileLayer(osmUrl, {minZoom: 1, maxZoom: 18, attribution: osmAttrib}).addTo(map);
