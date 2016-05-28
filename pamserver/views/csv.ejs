@@ -60,11 +60,20 @@ TAG1,1464208377,51.57,-0.03</textarea>
         this.map = map;
         this.resources = {};
         this.multiPolyline = null;
+        this.allFixes = [];
     }
 
     Fleet.prototype.addFix = function(fix) {
         if (!this.resources[fix.tag]) this.resources[fix.tag] = new Resource(fix.tag);
         this.resources[fix.tag].addFix(fix);
+
+        this.allFixes.push(fix);
+        // keep fixes sorted by timestamp
+        this.allFixes.sort(function(a, b) {
+            if (a.ts > b.ts) return 1;
+            if (a.ts < b.ts) return -1;
+            return 0;
+        });
     }
 
     Fleet.prototype.undraw = function() {
@@ -77,6 +86,7 @@ TAG1,1464208377,51.57,-0.03</textarea>
         console.log(text);
 
         this.resources = {};
+        this.allFixes = [];
 
         var lines = text.split(/[\n\r]/);
         for (var i in lines) {
@@ -93,8 +103,18 @@ TAG1,1464208377,51.57,-0.03</textarea>
         for (var tag in this.resources) {
             polylines.push(this.resources[tag].getPolyline());
         }
+
+        var latLngs = [];
+        for (var i in this.allFixes) {
+            var fix = this.allFixes[i];
+            latLngs.push([fix.lat, fix.lng]);
+        }
+        var bounds = new L.LatLngBounds(latLngs);
+        this.map.fitBounds(bounds);
+
         this.multiPolyline = L.multiPolyline(polylines);
         this.multiPolyline.addTo(this.map);
+
     }
 
     Fleet.prototype.updateCsv = function(csv) {
