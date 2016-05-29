@@ -19,7 +19,7 @@ html, body, div#wrapper, div#map {
     height: 100%;
 }
 
-body, div, p {
+body, div, p, input {
     padding: 0;
     margin: 0;
 }
@@ -73,4 +73,18 @@ h2 {
 
 #legend {
     padding: 0 10px;
+}
+
+#control_layer {
+    position: absolute;
+    z-index: 1000;
+}
+
+#controls {
+    background: #fff;
+    margin: 20px;
+}
+
+#time_slider {
+    width: 100%;
 }

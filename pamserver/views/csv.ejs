@@ -2,11 +2,12 @@
 <html>
 <head>
     <title><%= title %></title>
-    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css"/>
+    <link rel="stylesheet" href="/leaflet/leaflet.css"/>
     <link rel='stylesheet' href='/css/csv.css'/>
 </head>
 <body>
-<div id="map"></div>
+<div id="map">
+</div>
 <div id="sidebar">
     <div id="title">
         <h1>CartoChrono</h1>
@@ -21,14 +22,21 @@ TAG0,1464208377,51.51,-0.08
 TAG1,1464208377,51.58,-0.02
 TAG0,1464208387,51.52,-0.07
 TAG1,1464208377,51.57,-0.03</textarea>
+    <div id="controls">
+        <input type="range" name="points" id="time_slider" value="50" min="0" max="100">
+    </div>
 </div>
-<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+<script src="/leaflet/leaflet.js"></script>
 <script>
     function Fix(tag, ts, lat, lng) {
         this.tag = tag;
         this.ts = ts;
         this.lat = parseFloat(lat,10);
         this.lng = parseFloat(lng,10);
+    }
+
+    Fix.prototype.asLatLng = function() {
+        return [this.lat, this.lng];
     }
 
     function Resource(tag) {
@@ -55,12 +63,27 @@ TAG1,1464208377,51.57,-0.03</textarea>
         return polyline;
     }
 
+    Resource.prototype.getFixBeforeOrAt = function(ts) {
+        // resources whose first data is after ts will be show in their earliest known position
+        var last = this.fixes[0];
+
+        for (var i in this.fixes) {
+            if (this.fixes[i].ts > ts) return last;
+            last = this.fixes[i];
+        }
+        return last;
+    }
+
     // a container for multiple resources
-    function Fleet(map) {
+    function Fleet(map, time_slider) {
         this.map = map;
+        this.time_slider = time_slider;
         this.resources = {};
-        this.multiPolyline = null;
         this.allFixes = [];
+
+        // UI stuff
+        this.multiPolyline = null;
+        this.markersByTag = {};
     }
 
     Fleet.prototype.addFix = function(fix) {
@@ -107,7 +130,7 @@ TAG1,1464208377,51.57,-0.03</textarea>
         var latLngs = [];
         for (var i in this.allFixes) {
             var fix = this.allFixes[i];
-            latLngs.push([fix.lat, fix.lng]);
+            latLngs.push(fix.asLatLng());
         }
         var bounds = new L.LatLngBounds(latLngs);
         this.map.fitBounds(bounds);
@@ -115,6 +138,26 @@ TAG1,1464208377,51.57,-0.03</textarea>
         this.multiPolyline = L.multiPolyline(polylines);
         this.multiPolyline.addTo(this.map);
 
+        // set slider
+        if (this.allFixes.length > 1) {
+            this.time_slider.setAttribute('min', this.allFixes[0].ts);
+            this.time_slider.setAttribute('max', this.allFixes[this.allFixes.length - 1].ts);
+            this.time_slider.setAttribute('value', this.allFixes[this.allFixes.length - 1].ts);
+        }
+    }
+
+    // display markers for the fleet, as at a particular time
+    Fleet.prototype.asAt = function(ts) {
+        console.log('asAt', ts);
+        for (var tag in this.resources) {
+            var latLng = this.resources[tag].getFixBeforeOrAt(ts);
+            if (!this.markersByTag[tag]) {
+                this.markersByTag[tag] = L.marker(latLng);
+                this.markersByTag[tag].addTo(this.map);
+            } else {
+                this.markersByTag[tag].setLatLng(latLng);
+            }
+        }
     }
 
     Fleet.prototype.updateCsv = function(csv) {
@@ -129,8 +172,9 @@ TAG1,1464208377,51.57,-0.03</textarea>
         var osmAttrib = 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
         L.tileLayer(osmUrl, {minZoom: 1, maxZoom: 18, attribution: osmAttrib}).addTo(map);
 
-        var fleet = new Fleet(map);
         var csv_input = document.querySelectorAll('#csv_input')[0];
+        var time_slider = document.querySelectorAll('#time_slider')[0];
+        var fleet = new Fleet(map, time_slider);
         csv_input.addEventListener('keyup', function (arg) {
             console.log('keyup');
             fleet.updateCsv(csv_input.value);
@@ -139,9 +183,14 @@ TAG1,1464208377,51.57,-0.03</textarea>
             console.log('change');
             fleet.updateCsv(csv_input.value);
         });
+        time_slider.addEventListener('change', function (arg) {
+            console.log('time_slider change', arg);
+            fleet.asAt(time_slider.value);
+        })
 
         // display data when page loads
         fleet.updateCsv(csv_input.value);
+        fleet.asAt(Number.MAX_VALUE);
     }
 
     main();
