@@ -11,7 +11,6 @@
 <div id="sidebar">
     <div id="title">
         <h1>CartoChrono</h1>
-        <h2>- it's map time</h2>
     </div>
     <div id="legend">
         <p>Paste CSV data below:</p>
@@ -23,6 +22,9 @@ TAG1,1464208377,51.58,-0.02
 TAG0,1464208387,51.52,-0.07
 TAG1,1464208377,51.57,-0.03</textarea>
     <div id="controls">
+        <p>capture locations: <input type="checkbox" id="capture_checkbox"></p>
+
+        <p>time:</p>
         <input type="range" name="points" id="time_slider" value="50" min="0" max="100">
     </div>
 </div>
@@ -175,18 +177,32 @@ TAG1,1464208377,51.57,-0.03</textarea>
         var csv_input = document.querySelectorAll('#csv_input')[0];
         var time_slider = document.querySelectorAll('#time_slider')[0];
         var fleet = new Fleet(map, time_slider);
-        csv_input.addEventListener('keyup', function (arg) {
+        csv_input.addEventListener('keyup', function(arg) {
             console.log('keyup');
             fleet.updateCsv(csv_input.value);
         });
-        csv_input.addEventListener('change', function (arg) {
+        csv_input.addEventListener('change', function(arg) {
             console.log('change');
             fleet.updateCsv(csv_input.value);
         });
-        time_slider.addEventListener('change', function (arg) {
+        time_slider.addEventListener('change', function(arg) {
             console.log('time_slider change', arg);
             fleet.asAt(time_slider.value);
         })
+
+
+        var capture_checkbox = document.querySelectorAll('#capture_checkbox')[0];
+        function handleMouseMove(event) {
+            console.log('map mousemove', event.latlng);
+        }
+        capture_checkbox.addEventListener('change', function(arg) {
+            console.log('capture_checkbox', capture_checkbox.checked);
+            if (capture_checkbox.checked) {
+                map.on('mousemove', handleMouseMove);
+            } else {
+                map.off('mousemove', handleMouseMove);
+            }
+        });
 
         // display data when page loads
         fleet.updateCsv(csv_input.value);

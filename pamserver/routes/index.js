@@ -3,7 +3,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('csv', { title: 'CartoChrono - it\'s map time' });
+  res.render('csv', { title: 'CartoChrono' });
 });
 
 module.exports = router;
