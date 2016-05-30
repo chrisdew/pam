@@ -22,17 +22,33 @@ TAG1,1464208377,51.58,-0.02
 TAG0,1464208387,51.52,-0.07
 TAG1,1464208377,51.57,-0.03</textarea>
     <div id="controls">
-        <p>capture locations: <input type="checkbox" id="capture_checkbox"></p>
-
-        <p>time:</p>
-        <input type="range" name="points" id="time_slider" value="50" min="0" max="100">
+        <fieldset>
+            <legend><label>capture: <input type="checkbox" id="capture_checkbox">&nbsp;</label></legend>
+            <label>tag:<input type="text" id="capture_tag" value="CAPTURED"></label>
+            <p>lat/long: <span id="capture_latlng"></span></p>
+        </fieldset>
+        <fieldset>
+            <legend>time control</legend>
+            <input type="range" name="points" id="time_slider" value="50" min="0" max="100">
+        </fieldset>
     </div>
 </div>
 <script src="/leaflet/leaflet.js"></script>
 <script>
     function Fix(tag, ts, lat, lng) {
         this.tag = tag;
-        this.ts = ts;
+        var tsAsInt = parseInt(ts, 10);
+        if ('' + tsAsInt === ts) { // it's an integer
+            if (tsAsInt > 4000000000) { // *probably* in ms
+                this.ts = tsAsInt;
+            } else { // in seconds?
+                this.ts = tsAsInt * 1000;
+            }
+        } else if (Date.parse(ts)) {
+            this.ts = new Date(ts).getTime();
+        } else {
+            this.ts = 0; // don't break the slider control with null values
+        }
         this.lat = parseFloat(lat,10);
         this.lng = parseFloat(lng,10);
     }
@@ -191,16 +207,30 @@ TAG1,1464208377,51.57,-0.03</textarea>
         })
 
 
+        var map_div = document.querySelectorAll('#map_div')[0];
         var capture_checkbox = document.querySelectorAll('#capture_checkbox')[0];
+        capture_checkbox.checked = false;
+        var capture_tag = document.querySelectorAll('#capture_tag')[0];
+        var capture_latlng = document.querySelectorAll('#capture_latlng')[0];
         function handleMouseMove(event) {
             console.log('map mousemove', event.latlng);
+            capture_latlng.innerHTML = event.latlng.lat.toFixed(5) + ',' + event.latlng.lng.toFixed(5);
+        }
+        function handleClick(event) {
+            console.log('map mousemove', event.latlng);
+            csv_input.value += '\n' + capture_tag.value + ',' + new Date().toISOString() + ',' + event.latlng.lat.toFixed(8) + ',' + event.latlng.lng.toFixed(8);
+            csv_input.scrollTop = csv_input.scrollHeight;
+            fleet.updateCsv(csv_input.value);
         }
         capture_checkbox.addEventListener('change', function(arg) {
             console.log('capture_checkbox', capture_checkbox.checked);
             if (capture_checkbox.checked) {
                 map.on('mousemove', handleMouseMove);
+                map.on('click', handleClick);
+                map_div.style.cursor = 'crosshair';
             } else {
                 map.off('mousemove', handleMouseMove);
+                map.off('click', handleClick);
             }
         });
 

@@ -53,7 +53,8 @@ body {
 
 #csv_input {
     width: 100%;
-    flex: 1
+    flex: 1;
+    padding: 5px;
 }
 
 h1, h2 {
@@ -71,7 +72,7 @@ h2 {
 }
 
 #legend {
-    padding: 0 10px;
+    padding: 0 5px;
 }
 
 #control_layer {
@@ -81,7 +82,7 @@ h2 {
 
 #controls {
     background: #fff;
-    margin: 20px;
+    margin: 5px;
 }
 
 #time_slider {
