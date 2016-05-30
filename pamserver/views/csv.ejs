@@ -183,7 +183,9 @@ TAG1,1464208377,51.57,-0.03</textarea>
         for (var tag in this.resources) {
             var latLng = this.resources[tag].getFixBeforeOrAt(ts);
             if (!this.markersByTag[tag]) {
-                this.markersByTag[tag] = L.marker(latLng);
+                var html = '<div class="tag_main">' + tag + '</div><div class="triangle"></div>';
+                var icon = L.divIcon({html: html, className: 'tag_icon', iconAnchor: [0,44]});
+                this.markersByTag[tag] = L.marker(latLng, {icon: icon});
                 this.markersByTag[tag].addTo(this.map);
             } else {
                 this.markersByTag[tag].setLatLng(latLng);
