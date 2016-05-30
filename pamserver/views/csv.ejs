@@ -4,6 +4,7 @@
     <title><%= title %></title>
     <link rel="stylesheet" href="/leaflet/leaflet.css"/>
     <link rel='stylesheet' href='/css/csv.css'/>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 </head>
 <body>
 <div id="map">
@@ -14,74 +15,130 @@
     </div>
     <div id="legend">
         <p>Paste CSV data below:</p>
-        <p>(tag, time, lat, long)</p>
+        <p>(tag, time, lat, long) <button id="button_clear">clear</button></p>
     </div>
-    <textarea id="csv_input">CAR1,2016-05-30T18:55:27.991Z,51.509477,-0.080059
-CAR1,2016-05-30T18:55:29.824Z,51.509197,-0.080702
-CAR1,2016-05-30T18:55:30.900Z,51.509036,-0.081518
-CAR1,2016-05-30T18:55:31.867Z,51.508983,-0.082462
-CAR1,2016-05-30T18:55:33.140Z,51.509183,-0.083792
-CAR1,2016-05-30T18:55:36.057Z,51.509477,-0.085917
-CAR1,2016-05-30T18:55:36.990Z,51.509504,-0.086582
-CAR0,2016-05-30T18:55:39.547Z,51.506232,-0.088513
-CAR1,2016-05-30T18:55:39.754Z,51.509624,-0.087526
-CAR1,2016-05-30T18:55:40.890Z,51.509691,-0.088127
-CAR0,2016-05-30T18:55:42.072Z,51.507086,-0.088105
-CAR1,2016-05-30T18:55:42.187Z,51.509878,-0.088985
-CAR0,2016-05-30T18:55:43.834Z,51.507941,-0.087826
-CAR1,2016-05-30T18:55:43.196Z,51.510011,-0.089586
-CAR0,2016-05-30T18:55:45.602Z,51.508836,-0.087504
-CAR0,2016-05-30T18:55:46.850Z,51.509584,-0.087161
-CAR0,2016-05-30T18:55:49.555Z,51.510519,-0.086904
-CAR1,2016-05-30T18:55:50.439Z,51.510759,-0.089242
-CAR1,2016-05-30T18:55:51.882Z,51.510906,-0.089586
-CAR0,2016-05-30T18:55:56.853Z,51.510746,-0.085251
-CAR0,2016-05-30T18:55:58.259Z,51.510746,-0.084629
-CAR1,2016-05-30T18:55:59.537Z,51.511200,-0.087998
-CAR0,2016-05-30T18:56:01.547Z,51.510625,-0.083320
-CAR0,2016-05-30T18:56:03.145Z,51.510318,-0.082397
-CAR0,2016-05-30T18:56:04.402Z,51.510131,-0.081668
-CAR0,2016-05-30T18:56:05.619Z,51.509757,-0.080831
-CAR0,2016-05-30T18:56:06.570Z,51.509611,-0.079865
-CAR0,2016-05-30T18:56:07.636Z,51.509517,-0.078685
-CAR1,2016-05-30T18:56:09.004Z,51.510906,-0.086753
-CAR0,2016-05-30T18:56:10.136Z,51.509424,-0.077398
-CAR1,2016-05-30T18:56:10.313Z,51.510679,-0.085251
-CAR1,2016-05-30T18:56:11.641Z,51.510625,-0.083899
-CAR1,2016-05-30T18:56:12.968Z,51.510492,-0.082548
-CAR0,2016-05-30T18:56:13.335Z,51.509717,-0.075595
-CAR1,2016-05-30T18:56:15.602Z,51.509744,-0.080509
-CAR0,2016-05-30T18:56:16.865Z,51.509637,-0.074286
-CAR1,2016-05-30T18:56:17.482Z,51.509557,-0.079951
-CAR0,2016-05-30T18:56:18.366Z,51.509277,-0.073771
-CAR1,2016-05-30T18:56:21.203Z,51.509517,-0.079994
-CAR0,2016-05-30T18:56:22.067Z,51.508742,-0.073879
-CAR0,2016-05-30T18:56:23.717Z,51.507914,-0.074029
-CAR0,2016-05-30T18:56:26.314Z,51.507046,-0.074308
-CAR0,2016-05-30T18:56:27.586Z,51.506472,-0.074608
-CAR0,2016-05-30T18:56:28.717Z,51.506085,-0.074909
-CAR0,2016-05-30T18:56:29.722Z,51.505684,-0.075102
-CAR0,2016-05-30T18:56:31.850Z,51.505016,-0.075617
-CAR0,2016-05-30T18:56:32.993Z,51.504575,-0.075939
-CAR0,2016-05-30T18:56:34.999Z,51.503908,-0.076582
-CAR0,2016-05-30T18:56:36.299Z,51.503373,-0.076604
-CAR0,2016-05-30T18:56:38.569Z,51.502946,-0.076904
-CAR0,2016-05-30T18:56:39.798Z,51.502812,-0.077076
-CAR0,2016-05-30T18:56:41.065Z,51.502999,-0.078299
-CAR0,2016-05-30T18:56:42.566Z,51.503454,-0.080080
-CAR1,2016-05-30T18:55:43.964Z,51.510118,-0.089736
-CAR0,2016-05-30T18:56:44.232Z,51.503801,-0.081153
-CAR0,2016-05-30T18:56:45.641Z,51.504322,-0.082548
-CAR0,2016-05-30T18:56:46.785Z,51.504803,-0.083771
-CAR0,2016-05-30T18:56:48.148Z,51.505337,-0.084951
-CAR0,2016-05-30T18:56:49.392Z,51.505778,-0.086281
-CAR0,2016-05-30T18:56:50.313Z,51.505924,-0.087183
-CAR0,2016-05-30T18:56:51.384Z,51.506098,-0.088449
-CAR0,2016-05-30T18:56:52.721Z,51.506218,-0.088577</textarea>
+    <textarea id="csv_input">TAXI,2016-05-30T18:55:27Z,51.509477,-0.080059
+TAXI,2016-05-30T18:55:29Z,51.509197,-0.080702
+TAXI,2016-05-30T18:55:30Z,51.509036,-0.081518
+TAXI,2016-05-30T18:55:31Z,51.508983,-0.082462
+TAXI,2016-05-30T18:55:33Z,51.509183,-0.083792
+TAXI,2016-05-30T18:55:36Z,51.509477,-0.085917
+TAXI,2016-05-30T18:55:36Z,51.509504,-0.086582
+BUS,2016-05-30T18:55:39Z,51.506232,-0.088513
+TAXI,2016-05-30T18:55:39Z,51.509624,-0.087526
+TAXI,2016-05-30T18:55:40Z,51.509691,-0.088127
+BUS,2016-05-30T18:55:42Z,51.507086,-0.088105
+TAXI,2016-05-30T18:55:42Z,51.509878,-0.088985
+BUS,2016-05-30T18:55:43Z,51.507941,-0.087826
+TAXI,2016-05-30T18:55:43Z,51.510011,-0.089586
+BUS,2016-05-30T18:55:45Z,51.508836,-0.087504
+BUS,2016-05-30T18:55:46Z,51.509584,-0.087161
+BUS,2016-05-30T18:55:49Z,51.510519,-0.086904
+TAXI,2016-05-30T18:55:50Z,51.510759,-0.089242
+TAXI,2016-05-30T18:55:51Z,51.510906,-0.089586
+BUS,2016-05-30T18:55:56Z,51.510746,-0.085251
+BUS,2016-05-30T18:55:58Z,51.510746,-0.084629
+TAXI,2016-05-30T18:55:59Z,51.511200,-0.087998
+BUS,2016-05-30T18:56:01Z,51.510625,-0.083320
+BUS,2016-05-30T18:56:03Z,51.510318,-0.082397
+BUS,2016-05-30T18:56:04Z,51.510131,-0.081668
+BUS,2016-05-30T18:56:05Z,51.509757,-0.080831
+BUS,2016-05-30T18:56:06Z,51.509611,-0.079865
+BUS,2016-05-30T18:56:07Z,51.509517,-0.078685
+TAXI,2016-05-30T18:56:09Z,51.510906,-0.086753
+BUS,2016-05-30T18:56:10Z,51.509424,-0.077398
+TAXI,2016-05-30T18:56:10Z,51.510679,-0.085251
+TAXI,2016-05-30T18:56:11Z,51.510625,-0.083899
+TAXI,2016-05-30T18:56:12Z,51.510492,-0.082548
+BUS,2016-05-30T18:56:13Z,51.509717,-0.075595
+TAXI,2016-05-30T18:56:15Z,51.509744,-0.080509
+BUS,2016-05-30T18:56:16Z,51.509637,-0.074286
+TAXI,2016-05-30T18:56:17Z,51.509557,-0.079951
+BUS,2016-05-30T18:56:18Z,51.509277,-0.073771
+TAXI,2016-05-30T18:56:21Z,51.509517,-0.079994
+BUS,2016-05-30T18:56:22Z,51.508742,-0.073879
+BUS,2016-05-30T18:56:23Z,51.507914,-0.074029
+BUS,2016-05-30T18:56:26Z,51.507046,-0.074308
+BUS,2016-05-30T18:56:27Z,51.506472,-0.074608
+BUS,2016-05-30T18:56:28Z,51.506085,-0.074909
+BUS,2016-05-30T18:56:29Z,51.505684,-0.075102
+BUS,2016-05-30T18:56:31Z,51.505016,-0.075617
+BUS,2016-05-30T18:56:32Z,51.504575,-0.075939
+BUS,2016-05-30T18:56:34Z,51.503908,-0.076582
+BUS,2016-05-30T18:56:36Z,51.503373,-0.076604
+BUS,2016-05-30T18:56:38Z,51.502946,-0.076904
+BUS,2016-05-30T18:56:39Z,51.502812,-0.077076
+BUS,2016-05-30T18:56:41Z,51.502999,-0.078299
+BUS,2016-05-30T18:56:42Z,51.503454,-0.080080
+TAXI,2016-05-30T18:55:43Z,51.510118,-0.089736
+BUS,2016-05-30T18:56:44Z,51.503801,-0.081153
+BUS,2016-05-30T18:56:45Z,51.504322,-0.082548
+BUS,2016-05-30T18:56:46Z,51.504803,-0.083771
+BUS,2016-05-30T18:56:48Z,51.505337,-0.084951
+BUS,2016-05-30T18:56:49Z,51.505778,-0.086281
+BUS,2016-05-30T18:56:50Z,51.505924,-0.087183
+BUS,2016-05-30T18:56:51Z,51.506098,-0.088449
+BUS,2016-05-30T18:56:52Z,51.506218,-0.088577
+
+BOAT,2016-05-30T18:55:59Z,51.506926,-0.084629
+BOAT,2016-05-30T18:56:01Z,51.506886,-0.084071
+BOAT,2016-05-30T18:56:02Z,51.506939,-0.083385
+BOAT,2016-05-30T18:56:04Z,51.506953,-0.082955
+BOAT,2016-05-30T18:56:05Z,51.507033,-0.082483
+BOAT,2016-05-30T18:56:07Z,51.507086,-0.081947
+BOAT,2016-05-30T18:56:08Z,51.507167,-0.081518
+BOAT,2016-05-30T18:56:10Z,51.507247,-0.081003
+BOAT,2016-05-30T18:56:11Z,51.507300,-0.080445
+BOAT,2016-05-30T18:56:12Z,51.507367,-0.079951
+BOAT,2016-05-30T18:56:17Z,51.507367,-0.079565
+BOAT,2016-05-30T18:56:18Z,51.507300,-0.079157
+BOAT,2016-05-30T18:56:21Z,51.507207,-0.078685
+BOAT,2016-05-30T18:56:30Z,51.506966,-0.078149
+BOAT,2016-05-30T18:56:31Z,51.506699,-0.077655
+BOAT,2016-05-30T18:56:32Z,51.506525,-0.077398
+BOAT,2016-05-30T18:56:33Z,51.506125,-0.076818
+BOAT,2016-05-30T18:56:34Z,51.505844,-0.076389
+BOAT,2016-05-30T18:56:35Z,51.505644,-0.075788
+BOAT,2016-05-30T18:56:36Z,51.505510,-0.075295
+BOAT,2016-05-30T18:56:37Z,51.505377,-0.074801
+BOAT,2016-05-30T18:56:38Z,51.505257,-0.074093
+BOAT,2016-05-30T18:56:39Z,51.505030,-0.073450
+BOAT,2016-05-30T18:56:41Z,51.504856,-0.072892
+BOAT,2016-05-30T18:56:43Z,51.505537,-0.072892
+BOAT,2016-05-30T18:56:44Z,51.505684,-0.072999
+BOAT,2016-05-30T18:56:44Z,51.505858,-0.073321
+BOAT,2016-05-30T18:56:45Z,51.505978,-0.073557
+BOAT,2016-05-30T18:56:53Z,51.506111,-0.074222
+BOAT,2016-05-30T18:56:54Z,51.506125,-0.074480
+BOAT,2016-05-30T18:56:55Z,51.506192,-0.075467
+BOAT,2016-05-30T18:56:55Z,51.506205,-0.076089
+BOAT,2016-05-30T18:56:56Z,51.506178,-0.076754
+BOAT,2016-05-30T18:56:57Z,51.506178,-0.077462
+BOAT,2016-05-30T18:56:57Z,51.506312,-0.078192
+BOAT,2016-05-30T18:56:58Z,51.506499,-0.078900
+BOAT,2016-05-30T18:56:59Z,51.506606,-0.079565
+BOAT,2016-05-30T18:57:03Z,51.506779,-0.080402
+BOAT,2016-05-30T18:57:04Z,51.506926,-0.080960
+BOAT,2016-05-30T18:57:05Z,51.507046,-0.081539
+BOAT,2016-05-30T18:57:06Z,51.507180,-0.082355
+BOAT,2016-05-30T18:57:08Z,51.507273,-0.083148
+BOAT,2016-05-30T18:57:08Z,51.507500,-0.083878
+BOAT,2016-05-30T18:57:09Z,51.507874,-0.084071
+BOAT,2016-05-30T18:57:10Z,51.508248,-0.084457
+BOAT,2016-05-30T18:57:11Z,51.508475,-0.084801
+BOAT,2016-05-30T18:57:11Z,51.508582,-0.085273
+BOAT,2016-05-30T18:57:12Z,51.508636,-0.085959
+BOAT,2016-05-30T18:57:16Z,51.508676,-0.086281
+BOAT,2016-05-30T18:57:17Z,51.508222,-0.086260
+BOAT,2016-05-30T18:57:18Z,51.507834,-0.086131
+BOAT,2016-05-30T18:57:19Z,51.507220,-0.085595
+BOAT,2016-05-30T18:57:20Z,51.507140,-0.085337
+BOAT,2016-05-30T18:57:21Z,51.506939,-0.084715
+    </textarea>
     <div id="controls">
         <fieldset>
             <legend><label>capture: <input type="checkbox" id="capture_checkbox">&nbsp;</label></legend>
-            <label>tag:<input type="text" id="capture_tag" value="CAPTURED"></label>
+            <label>tag:<input type="text" id="capture_tag" value="TAG"></label>
             <p>lat/long: <span id="capture_latlng"></span></p>
         </fieldset>
         <fieldset>
@@ -89,6 +146,11 @@ CAR0,2016-05-30T18:56:52.721Z,51.506218,-0.088577</textarea>
             <span id="time_slider_start">s</span>
             <span id="time_slider_finish">f</span>
             <input type="range" name="points" id="time_slider" value="50" min="0" max="100">
+            <button id="playpause"><i id="playpause_i" class="fa fa-play"></i></button>
+            <button id="to_start"><i class="fa fa-fast-backward"></i></button>
+            <button id="step_backward"><i class="fa fa-step-backward"></i></button>
+            <button id="step_forward"><i class="fa fa-step-forward"></i></button>
+            <button id="to_finish"><i class="fa fa-fast-forward"></i></button>
         </fieldset>
     </div>
 </div>
@@ -259,6 +321,118 @@ CAR0,2016-05-30T18:56:52.721Z,51.506218,-0.088577</textarea>
         this.redraw();
     }
 
+    function Player(fleet) {
+        this.fleet = fleet;
+        this.state = "PAUSED";
+        this.pos = fleet.allFixes.length - 1;
+        this.time_slider = document.querySelectorAll('#time_slider')[0];
+        this.time_slider_start = document.querySelectorAll('#time_slider_start')[0];
+        this.time_slider_finish = document.querySelectorAll('#time_slider_finish')[0];
+        this.playpause = document.querySelectorAll('#playpause')[0];
+        this.playpause_i = document.querySelectorAll('#playpause_i')[0];
+        this.to_start = document.querySelectorAll('#to_start')[0];
+        this.step_backward = document.querySelectorAll('#step_backward')[0];
+        this.step_forward = document.querySelectorAll('#step_forward')[0];
+        this.to_finish = document.querySelectorAll('#to_finish')[0];
+        this.interval = false;
+
+        var that = this;
+        this.time_slider.addEventListener('change', function(arg) {
+            console.log('time_slider change', arg);
+            that.fleet.asAt(time_slider.value);
+        });
+        this.playpause.addEventListener('click', function(arg) {
+            if (that.state === "PAUSED") {
+                that.play();
+            } else if (that.state === "PLAYING") {
+                that.pause();
+            }
+        });
+        this.to_start.addEventListener('click', function(arg) {
+            if (that.state === "PLAYING") that.pause();
+            that.pos = 0;
+            that.step(0);
+        });
+        this.step_backward.addEventListener('click', function(arg) {
+            if (that.state === "PLAYING") that.pause();
+            that.step(-1);
+        });
+        this.step_forward.addEventListener('click', function(arg) {
+            if (that.state === "PLAYING") that.pause();
+            that.step(1);
+        });
+        this.to_finish.addEventListener('click', function(arg) {
+            if (that.state === "PLAYING") that.pause();
+            that.pos = -1;
+            that.step(0);
+        });
+
+    }
+
+    Player.prototype.play = function() {
+        this.state = "PLAYING";
+        var el = this.playpause_i;
+        var className = 'fa-play';
+        if (el.classList)
+            el.classList.remove(className);
+        else
+            el.className = el.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
+
+        className = 'fa-pause';
+        if (el.classList)
+            el.classList.add(className);
+        else
+            el.className += ' ' + className;
+
+        if (this.interval) {
+            clearInterval(this.interval);
+            this.interval = false;
+        }
+        var that = this;
+        this.interval = setInterval(function() {
+            that.step(1);
+        }, 200);
+    }
+
+    Player.prototype.pause = function() {
+        this.state = "PAUSED";
+        var el = this.playpause_i;
+        var className = 'fa-pause';
+        if (el.classList)
+            el.classList.remove(className);
+        else
+            el.className = el.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
+
+        className = 'fa-play';
+        if (el.classList)
+            el.classList.add(className);
+        else
+            el.className += ' ' + className;
+
+        if (this.interval) {
+            clearInterval(this.interval);
+            this.interval = false;
+        }
+    }
+
+    Player.prototype.step = function(dir) {
+        var numSteps = this.fleet.allFixes.length;
+        if (numSteps === 0) return;
+        this.pos = mod(this.pos + dir, numSteps);
+        this.time_slider.value = this.fleet.allFixes[this.pos].ts;
+        this.fleet.asAt(this.fleet.allFixes[this.pos].ts);
+    }
+
+    function mod(a, b) {
+        while (a < 0) {
+            a += b;
+        }
+        while (a >= b) {
+            a -= b;
+        }
+        return a;
+    }
+
     function main() {
         var map = L.map('map').setView([51.505, -0.09], 11);
         var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
@@ -266,10 +440,8 @@ CAR0,2016-05-30T18:56:52.721Z,51.506218,-0.088577</textarea>
         L.tileLayer(osmUrl, {minZoom: 1, maxZoom: 18, attribution: osmAttrib}).addTo(map);
 
         var csv_input = document.querySelectorAll('#csv_input')[0];
-        var time_slider = document.querySelectorAll('#time_slider')[0];
-        var time_slider_start = document.querySelectorAll('#time_slider_start')[0];
-        var time_slider_finish = document.querySelectorAll('#time_slider_finish')[0];
         var fleet = new Fleet(map, time_slider, time_slider_start, time_slider_finish);
+        var player = new Player(fleet);
         csv_input.addEventListener('keyup', function(arg) {
             console.log('keyup');
             fleet.updateCsv(csv_input.value);
@@ -280,13 +452,10 @@ CAR0,2016-05-30T18:56:52.721Z,51.506218,-0.088577</textarea>
             fleet.updateCsv(csv_input.value);
             fleet.asAt(Number.MAX_VALUE);
         });
-        time_slider.addEventListener('change', function(arg) {
-            console.log('time_slider change', arg);
-            fleet.asAt(time_slider.value);
-        })
 
 
         var map_div = document.querySelectorAll('#map_div')[0];
+        var button_clear = document.querySelectorAll('#button_clear')[0];
         var capture_checkbox = document.querySelectorAll('#capture_checkbox')[0];
         capture_checkbox.checked = false;
         var capture_tag = document.querySelectorAll('#capture_tag')[0];
@@ -297,7 +466,7 @@ CAR0,2016-05-30T18:56:52.721Z,51.506218,-0.088577</textarea>
         }
         function handleClick(event) {
             console.log('map mousemove', event.latlng);
-            csv_input.value += '\n' + capture_tag.value + ',' + new Date().toISOString() + ',' + event.latlng.lat.toFixed(6) + ',' + event.latlng.lng.toFixed(6);
+            csv_input.value += '\n' + capture_tag.value + ',' + new Date().toISOString().substr(0,19) + 'Z,' + event.latlng.lat.toFixed(6) + ',' + event.latlng.lng.toFixed(6);
             csv_input.scrollTop = csv_input.scrollHeight;
             fleet.updateCsv(csv_input.value);
             fleet.asAt(Number.MAX_VALUE);
@@ -316,6 +485,13 @@ CAR0,2016-05-30T18:56:52.721Z,51.506218,-0.088577</textarea>
                 fleet.scaleToFit = true;
             }
         });
+        button_clear.addEventListener('click', function() {
+            csv_input.value = '';
+            fleet.updateCsv(csv_input.value);
+            fleet.asAt(Number.MAX_VALUE);
+        });
+
+
 
         // display data when page loads
         fleet.updateCsv(csv_input.value);

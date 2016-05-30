@@ -11,6 +11,9 @@ body, p, h1, h2 {
     font-family: 'DejaVuSans', Arial, sans-serif;
 }
 
+textarea {
+}
+
 *, *:before, *:after {
     box-sizing: border-box;
 }
@@ -37,7 +40,7 @@ body {
 
 #sidebar {
     order: -1;
-    flex: 0 0 20em;
+    flex: 0 0 22em;
     height: 100%;
     flex-direction: column;
     display: flex;
