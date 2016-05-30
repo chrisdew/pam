@@ -40,7 +40,7 @@ body {
 
 #sidebar {
     order: -1;
-    flex: 0 0 22em;
+    flex: 0 0 23em;
     height: 100%;
     flex-direction: column;
     display: flex;
