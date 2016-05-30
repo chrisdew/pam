@@ -88,3 +88,11 @@ h2 {
 #time_slider {
     width: 100%;
 }
+
+#time_slider_start {
+    float: left;
+}
+
+#time_slider_finish {
+    float: right;
+}

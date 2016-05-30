@@ -29,6 +29,8 @@ TAG1,1464208377,51.57,-0.03</textarea>
         </fieldset>
         <fieldset>
             <legend>time control</legend>
+            <span id="time_slider_start">s</span>
+            <span id="time_slider_finish">f</span>
             <input type="range" name="points" id="time_slider" value="50" min="0" max="100">
         </fieldset>
     </div>
@@ -93,9 +95,11 @@ TAG1,1464208377,51.57,-0.03</textarea>
     }
 
     // a container for multiple resources
-    function Fleet(map, time_slider) {
+    function Fleet(map, time_slider, time_slider_start, time_slider_finish) {
         this.map = map;
         this.time_slider = time_slider;
+        this.time_slider_start = time_slider_start;
+        this.time_slider_finish = time_slider_finish;
         this.resources = {};
         this.allFixes = [];
 
@@ -165,6 +169,11 @@ TAG1,1464208377,51.57,-0.03</textarea>
             this.time_slider.setAttribute('min', this.allFixes[0].ts);
             this.time_slider.setAttribute('max', this.allFixes[this.allFixes.length - 1].ts);
             this.time_slider.setAttribute('value', this.allFixes[this.allFixes.length - 1].ts);
+
+            var start = new Date(this.allFixes[0].ts).toISOString();
+            this.time_slider_start.innerHTML = start.substr(11,8);
+            var finish = new Date(this.allFixes[this.allFixes.length - 1].ts).toISOString();
+            this.time_slider_finish.innerHTML = finish.substr(11,8);
         }
     }
 
@@ -196,7 +205,9 @@ TAG1,1464208377,51.57,-0.03</textarea>
 
         var csv_input = document.querySelectorAll('#csv_input')[0];
         var time_slider = document.querySelectorAll('#time_slider')[0];
-        var fleet = new Fleet(map, time_slider);
+        var time_slider_start = document.querySelectorAll('#time_slider_start')[0];
+        var time_slider_finish = document.querySelectorAll('#time_slider_finish')[0];
+        var fleet = new Fleet(map, time_slider, time_slider_start, time_slider_finish);
         csv_input.addEventListener('keyup', function(arg) {
             console.log('keyup');
             fleet.updateCsv(csv_input.value);
