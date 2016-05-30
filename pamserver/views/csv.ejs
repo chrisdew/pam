@@ -307,11 +307,12 @@ CAR0,2016-05-30T18:56:52.721Z,51.506218,-0.088577</textarea>
             if (capture_checkbox.checked) {
                 map.on('mousemove', handleMouseMove);
                 map.on('click', handleClick);
-                map_div.style.cursor = 'crosshair';
+                document.getElementById('map').style.cursor = 'crosshair'
                 fleet.scaleToFit = false;
             } else {
                 map.off('mousemove', handleMouseMove);
                 map.off('click', handleClick);
+                document.getElementById('map').style.cursor = ''
                 fleet.scaleToFit = true;
             }
         });
