@@ -121,6 +121,10 @@ TAG1,1464208377,51.57,-0.03</textarea>
         if (this.multiPolyline != null) {
             this.map.removeLayer(this.multiPolyline);
         }
+        for (var tag in this.markersByTag) {
+            this.map.removeLayer(this.markersByTag[tag]);
+            delete this.markersByTag[tag];
+        }
     }
 
     Fleet.prototype.parseCsv = function(text) {
@@ -196,10 +200,12 @@ TAG1,1464208377,51.57,-0.03</textarea>
         csv_input.addEventListener('keyup', function(arg) {
             console.log('keyup');
             fleet.updateCsv(csv_input.value);
+            fleet.asAt(Number.MAX_VALUE);
         });
         csv_input.addEventListener('change', function(arg) {
             console.log('change');
             fleet.updateCsv(csv_input.value);
+            fleet.asAt(Number.MAX_VALUE);
         });
         time_slider.addEventListener('change', function(arg) {
             console.log('time_slider change', arg);
@@ -221,6 +227,7 @@ TAG1,1464208377,51.57,-0.03</textarea>
             csv_input.value += '\n' + capture_tag.value + ',' + new Date().toISOString() + ',' + event.latlng.lat.toFixed(8) + ',' + event.latlng.lng.toFixed(8);
             csv_input.scrollTop = csv_input.scrollHeight;
             fleet.updateCsv(csv_input.value);
+            fleet.asAt(Number.MAX_VALUE);
         }
         capture_checkbox.addEventListener('change', function(arg) {
             console.log('capture_checkbox', capture_checkbox.checked);
